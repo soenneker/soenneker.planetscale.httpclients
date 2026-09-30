@@ -12,7 +12,7 @@ namespace Soenneker.PlanetScale.HttpClients.Tests;
 public sealed class PlanetScaleOpenApiHttpClientTests
 {
     [Test]
-    public async Task Preserves_version_path_and_service_token_and_caches_client()
+    public async ValueTask Preserves_version_path_and_service_token_and_caches_client()
     {
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
         {
