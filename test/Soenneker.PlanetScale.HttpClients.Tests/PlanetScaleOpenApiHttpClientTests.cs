@@ -6,13 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Soenneker.PlanetScale.HttpClients.Abstract;
 using Soenneker.PlanetScale.HttpClients.Registrars;
+using System.Threading;
 
 namespace Soenneker.PlanetScale.HttpClients.Tests;
 
 public sealed class PlanetScaleOpenApiHttpClientTests
 {
     [Test]
-    public async ValueTask Preserves_version_path_and_service_token_and_caches_client()
+    public async ValueTask Preserves_version_path_and_service_token_and_caches_client(CancellationToken cancellationToken)
     {
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
         {
@@ -25,8 +26,8 @@ public sealed class PlanetScaleOpenApiHttpClientTests
         await using var provider = services.BuildServiceProvider();
         var utility = provider.GetRequiredService<IPlanetScaleOpenApiHttpClient>();
 
-        var client = await utility.Get();
-        await Assert.That(ReferenceEquals(client, await utility.Get())).IsTrue();
+        var client = await utility.Get(cancellationToken: cancellationToken);
+        await Assert.That(ReferenceEquals(client, await utility.Get(cancellationToken: cancellationToken))).IsTrue();
         await Assert.That(new Uri(client.BaseAddress!, "organizations").AbsoluteUri).IsEqualTo("https://api.planetscale.com/v1/organizations");
         await Assert.That(client.DefaultRequestHeaders.GetValues("Authorization").Single()).IsEqualTo("test-id:test-token");
     }
