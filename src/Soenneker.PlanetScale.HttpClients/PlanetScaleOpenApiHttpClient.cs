@@ -28,7 +28,7 @@ public sealed class PlanetScaleOpenApiHttpClient : IPlanetScaleOpenApiHttpClient
     {
         return _httpClientCache.Get(nameof(PlanetScaleOpenApiHttpClient), (config: _config, baseUrl: _config["PlanetScale:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
         {
-            var apiKey = state.config.GetValueStrict<string>("PlanetScale:ApiKey");
+            var apiKey = state.config.GetStringStrict("PlanetScale:ApiKey");
             string authHeaderName = state.config["PlanetScale:AuthHeaderName"] ?? "Authorization";
             string authHeaderValueTemplate = state.config["PlanetScale:AuthHeaderValueTemplate"] ?? "{token}";
             string authHeaderValue = authHeaderValueTemplate.Replace("{token}", apiKey, StringComparison.Ordinal);
